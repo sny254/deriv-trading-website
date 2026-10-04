@@ -1,0 +1,1265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>DerivTrade - Professional Trading Platform</title>
+  <style>
+    :root {
+      --primary: #ff6b35;
+      --primary-light: #ff8c5a;
+      --primary-dark: #e55a27;
+      --bg-dark: #0a0e27;
+      --bg-darker: #050812;
+      --bg-card: #151d3a;
+      --bg-panel: rgba(21, 29, 58, 0.8);
+      --border: rgba(255, 255, 255, 0.08);
+      --text-primary: #f0f4f8;
+      --text-secondary: #cbd5e1;
+      --text-muted: #94a3b8;
+      --success: #10b981;
+      --danger: #ef4444;
+      --warning: #f59e0b;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html, body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: linear-gradient(135deg, var(--bg-darker) 0%, var(--bg-dark) 100%);
+      color: var(--text-primary);
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+
+    body {
+      overflow-x: hidden;
+    }
+
+    /* Animations */
+    @keyframes fadeInDown {
+      from {
+        opacity: 0;
+        transform: translateY(-30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes slideInRight {
+      from {
+        opacity: 0;
+        transform: translateX(50px);
+      }
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
+    }
+
+    @keyframes glow {
+      0%, 100% { box-shadow: 0 0 20px rgba(255, 107, 53, 0.3); }
+      50% { box-shadow: 0 0 40px rgba(255, 107, 53, 0.6); }
+    }
+
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 0 20px;
+    }
+
+    /* Header & Navigation */
+    header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 1000;
+      background: rgba(10, 14, 39, 0.95);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 20px;
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 1.4rem;
+      font-weight: 800;
+      color: var(--primary);
+      text-decoration: none;
+      animation: fadeInDown 0.6s ease;
+    }
+
+    .logo-icon {
+      width: 40px;
+      height: 40px;
+      background: linear-gradient(135deg, var(--primary), var(--primary-light));
+      border-radius: 12px;
+      display: grid;
+      place-items: center;
+      font-weight: 900;
+      color: white;
+      font-size: 1.2rem;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 32px;
+      list-style: none;
+    }
+
+    .nav-links a {
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 0.95rem;
+      transition: color 0.3s ease;
+    }
+
+    .nav-links a:hover {
+      color: var(--primary);
+    }
+
+    .nav-actions {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .status-indicator {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+
+    .status-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--danger);
+      animation: pulse 2s ease-in-out infinite;
+    }
+
+    .status-dot.online {
+      background: var(--success);
+    }
+
+    /* Buttons */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 12px 24px;
+      border: none;
+      border-radius: 10px;
+      font-weight: 600;
+      font-size: 0.95rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-decoration: none;
+      white-space: nowrap;
+      font-family: inherit;
+    }
+
+    .btn:hover {
+      transform: translateY(-2px);
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--primary), var(--primary-light));
+      color: white;
+      box-shadow: 0 8px 24px rgba(255, 107, 53, 0.28);
+    }
+
+    .btn-primary:hover {
+      box-shadow: 0 12px 32px rgba(255, 107, 53, 0.4);
+    }
+
+    .btn-secondary {
+      background: rgba(255, 255, 255, 0.08);
+      color: var(--text-primary);
+      border: 1px solid var(--border);
+    }
+
+    .btn-secondary:hover {
+      background: rgba(255, 255, 255, 0.12);
+      border-color: rgba(255, 255, 255, 0.15);
+    }
+
+    .btn-icon {
+      width: 40px;
+      height: 40px;
+      padding: 0;
+      display: grid;
+      place-items: center;
+    }
+
+    /* Hero Section */
+    .hero {
+      margin-top: 80px;
+      min-height: calc(100vh - 80px);
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      align-items: center;
+      gap: 60px;
+      padding: 60px 20px;
+      animation: fadeInUp 0.8s ease;
+    }
+
+    .hero-content h1 {
+      font-size: clamp(2.5rem, 6vw, 4.5rem);
+      line-height: 1.1;
+      margin-bottom: 20px;
+      letter-spacing: -0.02em;
+      background: linear-gradient(135deg, var(--text-primary), var(--primary));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .hero-content p {
+      font-size: 1.1rem;
+      color: var(--text-secondary);
+      margin-bottom: 30px;
+      line-height: 1.8;
+      max-width: 500px;
+    }
+
+    .hero-actions {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+      margin-bottom: 40px;
+    }
+
+    .hero-features {
+      display: grid;
+      gap: 16px;
+      margin-top: 40px;
+    }
+
+    .feature-item {
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+    }
+
+    .feature-check {
+      width: 24px;
+      height: 24px;
+      background: rgba(16, 185, 129, 0.2);
+      border: 1px solid var(--success);
+      border-radius: 6px;
+      display: grid;
+      place-items: center;
+      flex-shrink: 0;
+      color: var(--success);
+      font-weight: bold;
+    }
+
+    .feature-text {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .feature-text strong {
+      color: var(--text-primary);
+      font-size: 0.95rem;
+    }
+
+    .feature-text span {
+      color: var(--text-muted);
+      font-size: 0.85rem;
+    }
+
+    .hero-visual {
+      position: relative;
+      height: 500px;
+      display: grid;
+      place-items: center;
+    }
+
+    .floating-card {
+      position: absolute;
+      background: var(--bg-panel);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 24px;
+      backdrop-filter: blur(10px);
+      animation: fadeInUp 0.8s ease;
+    }
+
+    .card-1 {
+      width: 280px;
+      top: 20px;
+      left: 0;
+      box-shadow: -20px 20px 60px rgba(0, 0, 0, 0.5);
+      animation: slideInRight 0.8s ease 0.2s both;
+    }
+
+    .card-2 {
+      width: 320px;
+      bottom: 40px;
+      right: 0;
+      box-shadow: 20px 20px 60px rgba(0, 0, 0, 0.5);
+      animation: slideInRight 0.8s ease 0.4s both;
+    }
+
+    .card-label {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: 8px;
+      font-weight: 600;
+    }
+
+    .card-value {
+      font-size: 1.8rem;
+      font-weight: 800;
+      color: var(--primary);
+      margin-bottom: 12px;
+    }
+
+    .card-desc {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+    }
+
+    /* Main Section */
+    main {
+      padding: 60px 20px;
+    }
+
+    .section-title {
+      text-align: center;
+      margin-bottom: 50px;
+    }
+
+    .section-label {
+      display: inline-block;
+      background: rgba(255, 107, 53, 0.15);
+      border: 1px solid rgba(255, 107, 53, 0.3);
+      color: var(--primary);
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 16px;
+    }
+
+    .section-title h2 {
+      font-size: clamp(2rem, 5vw, 3.5rem);
+      margin-bottom: 16px;
+      letter-spacing: -0.01em;
+    }
+
+    .section-desc {
+      color: var(--text-secondary);
+      font-size: 1.1rem;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    /* Dashboard Preview */
+    .dashboard-preview {
+      background: var(--bg-panel);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
+      animation: fadeInUp 0.8s ease;
+    }
+
+    .dashboard-header {
+      padding: 24px 32px;
+      background: linear-gradient(135deg, rgba(255, 107, 53, 0.08), rgba(255, 107, 53, 0.04));
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .dashboard-header h3 {
+      font-size: 1.3rem;
+      font-weight: 700;
+    }
+
+    .dashboard-tabs {
+      display: flex;
+      gap: 8px;
+    }
+
+    .tab {
+      padding: 6px 12px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: var(--text-muted);
+      font-size: 0.85rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .tab.active {
+      background: var(--primary);
+      border-color: var(--primary);
+      color: white;
+    }
+
+    .dashboard-content {
+      padding: 32px;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 20px;
+    }
+
+    .stat-box {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 20px;
+      transition: all 0.3s ease;
+    }
+
+    .stat-box:hover {
+      background: rgba(255, 255, 255, 0.06);
+      border-color: rgba(255, 255, 255, 0.15);
+      transform: translateY(-4px);
+    }
+
+    .stat-label {
+      color: var(--text-muted);
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 12px;
+      font-weight: 600;
+    }
+
+    .stat-value {
+      font-size: 1.6rem;
+      font-weight: 800;
+      margin-bottom: 8px;
+    }
+
+    .stat-change {
+      font-size: 0.8rem;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .stat-change.positive {
+      color: var(--success);
+    }
+
+    .stat-change.negative {
+      color: var(--danger);
+    }
+
+    /* Features Grid */
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 24px;
+      margin-top: 50px;
+    }
+
+    .feature-card {
+      background: var(--bg-panel);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 32px;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .feature-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--primary), transparent);
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    .feature-card:hover {
+      border-color: rgba(255, 107, 53, 0.5);
+      transform: translateY(-8px);
+      box-shadow: 0 20px 40px rgba(255, 107, 53, 0.15);
+    }
+
+    .feature-card:hover::before {
+      opacity: 1;
+    }
+
+    .feature-icon {
+      width: 56px;
+      height: 56px;
+      background: rgba(255, 107, 53, 0.15);
+      border: 1px solid rgba(255, 107, 53, 0.3);
+      border-radius: 12px;
+      display: grid;
+      place-items: center;
+      margin-bottom: 16px;
+      font-size: 1.5rem;
+    }
+
+    .feature-card h3 {
+      font-size: 1.1rem;
+      margin-bottom: 12px;
+      font-weight: 700;
+    }
+
+    .feature-card p {
+      color: var(--text-secondary);
+      font-size: 0.95rem;
+      line-height: 1.6;
+    }
+
+    /* Trading Interface */
+    .trading-interface {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+      margin-top: 50px;
+    }
+
+    .trade-panel {
+      background: var(--bg-panel);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 28px;
+    }
+
+    .trade-panel h3 {
+      margin-bottom: 20px;
+      font-size: 1.2rem;
+    }
+
+    .chart-placeholder {
+      width: 100%;
+      height: 300px;
+      background: linear-gradient(135deg, rgba(255, 107, 53, 0.08), rgba(255, 107, 53, 0.02));
+      border: 1px dashed var(--border);
+      border-radius: 12px;
+      display: grid;
+      place-items: center;
+      color: var(--text-muted);
+      font-size: 0.95rem;
+      margin-bottom: 16px;
+    }
+
+    .form-group {
+      margin-bottom: 16px;
+    }
+
+    .form-label {
+      display: block;
+      margin-bottom: 8px;
+      color: var(--text-secondary);
+      font-size: 0.9rem;
+      font-weight: 600;
+    }
+
+    .form-input {
+      width: 100%;
+      padding: 12px 14px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      color: var(--text-primary);
+      font-family: inherit;
+      font-size: 0.95rem;
+      transition: all 0.3s ease;
+    }
+
+    .form-input:focus {
+      outline: none;
+      border-color: rgba(255, 107, 53, 0.6);
+      background: rgba(255, 107, 53, 0.05);
+    }
+
+    .direction-buttons {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+
+    .direction-btn {
+      padding: 12px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      color: var(--text-secondary);
+      cursor: pointer;
+      font-weight: 600;
+      transition: all 0.3s ease;
+    }
+
+    .direction-btn.active {
+      background: var(--primary);
+      border-color: var(--primary);
+      color: white;
+    }
+
+    /* Footer */
+    footer {
+      background: rgba(5, 8, 18, 0.8);
+      border-top: 1px solid var(--border);
+      padding: 40px 20px;
+      margin-top: 80px;
+    }
+
+    .footer-content {
+      max-width: 1400px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 40px;
+      margin-bottom: 40px;
+    }
+
+    .footer-section h4 {
+      margin-bottom: 16px;
+      font-size: 0.95rem;
+      font-weight: 700;
+    }
+
+    .footer-section ul {
+      list-style: none;
+    }
+
+    .footer-section a {
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 0.9rem;
+      transition: color 0.3s ease;
+      display: block;
+      margin-bottom: 8px;
+    }
+
+    .footer-section a:hover {
+      color: var(--primary);
+    }
+
+    .footer-bottom {
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 0.85rem;
+      border-top: 1px solid var(--border);
+      padding-top: 24px;
+    }
+
+    /* Modal */
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.7);
+      backdrop-filter: blur(5px);
+      z-index: 2000;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .modal.active {
+      display: flex;
+      animation: fadeInUp 0.4s ease;
+    }
+
+    .modal-content {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 40px;
+      max-width: 500px;
+      width: 90%;
+      max-height: 80vh;
+      overflow-y: auto;
+    }
+
+    .modal-header {
+      margin-bottom: 24px;
+    }
+
+    .modal-header h2 {
+      font-size: 1.8rem;
+      margin-bottom: 8px;
+    }
+
+    .modal-close {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      width: 32px;
+      height: 32px;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: var(--text-primary);
+      cursor: pointer;
+      display: grid;
+      place-items: center;
+      font-size: 1.5rem;
+      transition: all 0.3s ease;
+    }
+
+    .modal-close:hover {
+      background: rgba(255, 255, 255, 0.12);
+    }
+
+    .modal-form {
+      display: grid;
+      gap: 16px;
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    /* Responsive */
+    @media (max-width: 1200px) {
+      .dashboard-content {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .trading-interface {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .hero {
+        grid-template-columns: 1fr;
+        padding: 40px 20px;
+        margin-top: 0;
+      }
+
+      .hero-visual {
+        display: none;
+      }
+
+      .nav-links {
+        display: none;
+      }
+
+      .dashboard-content {
+        grid-template-columns: 1fr;
+      }
+
+      .footer-content {
+        grid-template-columns: 1fr;
+        gap: 20px;
+      }
+
+      .stat-box {
+        padding: 16px;
+      }
+
+      .modal-content {
+        padding: 24px;
+      }
+    }
+
+    /* Hidden/Show Classes */
+    .hidden {
+      display: none !important;
+    }
+
+    /* Loading State */
+    .loading {
+      opacity: 0.6;
+      pointer-events: none;
+    }
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <header>
+    <nav>
+      <a href="#" class="logo">
+        <div class="logo-icon">D</div>
+        <span>DerivTrade</span>
+      </a>
+
+      <ul class="nav-links">
+        <li><a href="#home">Home</a></li>
+        <li><a href="#features">Features</a></li>
+        <li><a href="#trading">Trading</a></li>
+        <li><a href="#faq">FAQ</a></li>
+      </ul>
+
+      <div class="nav-actions">
+        <div class="status-indicator">
+          <span class="status-dot" id="statusDot"></span>
+          <span id="statusText">Offline</span>
+        </div>
+        <button class="btn btn-primary" onclick="openLoginModal()">Get Started</button>
+      </div>
+    </nav>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="hero" id="home">
+    <div class="hero-content">
+      <h1>Trade with Confidence</h1>
+      <p>
+        A professional-grade trading platform powered by Deriv's real-time market data and execution engine. Trade forex, commodities, and indices with precision.
+      </p>
+
+      <div class="hero-actions">
+        <button class="btn btn-primary" onclick="openLoginModal()">Start Trading Now</button>
+        <button class="btn btn-secondary" onclick="scrollToSection('features')">Learn More</button>
+      </div>
+
+      <div class="hero-features">
+        <div class="feature-item">
+          <div class="feature-check">✓</div>
+          <div class="feature-text">
+            <strong>Real-time Market Data</strong>
+            <span>Live price feeds from 100+ markets</span>
+          </div>
+        </div>
+        <div class="feature-item">
+          <div class="feature-check">✓</div>
+          <div class="feature-text">
+            <strong>Secure Authentication</strong>
+            <span>Token-based authentication with Deriv API</span>
+          </div>
+        </div>
+        <div class="feature-item">
+          <div class="feature-check">✓</div>
+          <div class="feature-text">
+            <strong>Instant Execution</strong>
+            <span>Trade orders placed instantly via WebSocket</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="hero-visual">
+      <div class="floating-card card-1">
+        <div class="card-label">Portfolio Value</div>
+        <div class="card-value">$12,450.50</div>
+        <div class="card-desc">+12.5% this month</div>
+      </div>
+
+      <div class="floating-card card-2">
+        <div class="card-label">Active Trades</div>
+        <div class="card-value">8</div>
+        <div class="card-desc">5 winning • 3 pending</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Features Section -->
+  <main>
+    <section id="features">
+      <div class="section-title">
+        <span class="section-label">✨ Features</span>
+        <h2>Powerful Trading Tools</h2>
+        <p class="section-desc">Everything you need for professional trading in one platform</p>
+      </div>
+
+      <div class="features-grid">
+        <div class="feature-card">
+          <div class="feature-icon">📊</div>
+          <h3>Live Charts</h3>
+          <p>Real-time price charts with technical analysis tools for all major markets</p>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon">⚡</div>
+          <h3>Instant Execution</h3>
+          <p>Place trades instantly with zero latency execution through WebSocket</p>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon">💼</div>
+          <h3>Portfolio Management</h3>
+          <p>Track positions, manage risk, and monitor your trading performance</p>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon">🔒</div>
+          <h3>Secure & Safe</h3>
+          <p>Enterprise-grade security with token-based authentication</p>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon">📱</div>
+          <h3>Responsive Design</h3>
+          <p>Trade on desktop, tablet, or mobile with full functionality</p>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon">🌍</div>
+          <h3>Global Markets</h3>
+          <p>Access forex, commodities, indices, and more from 100+ markets</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Dashboard Preview -->
+    <section style="margin-top: 80px;">
+      <div class="section-title">
+        <span class="section-label">🎨 Dashboard</span>
+        <h2>Professional Interface</h2>
+        <p class="section-desc">A clean, intuitive dashboard designed for traders</p>
+      </div>
+
+      <div class="dashboard-preview">
+        <div class="dashboard-header">
+          <h3>Trading Dashboard</h3>
+          <div class="dashboard-tabs">
+            <div class="tab active">Overview</div>
+            <div class="tab">Markets</div>
+            <div class="tab">Positions</div>
+            <div class="tab">History</div>
+          </div>
+        </div>
+
+        <div class="dashboard-content">
+          <div class="stat-box">
+            <div class="stat-label">Account Balance</div>
+            <div class="stat-value">$25,000</div>
+            <div class="stat-change positive">↑ +$2,500 (11.1%)</div>
+          </div>
+
+          <div class="stat-box">
+            <div class="stat-label">Available Margin</div>
+            <div class="stat-value">$18,750</div>
+            <div class="stat-change">75% available</div>
+          </div>
+
+          <div class="stat-box">
+            <div class="stat-label">Open Positions</div>
+            <div class="stat-value">12</div>
+            <div class="stat-change positive">↑ 10 winning</div>
+          </div>
+
+          <div class="stat-box">
+            <div class="stat-label">Win Rate</div>
+            <div class="stat-value">68.5%</div>
+            <div class="stat-change positive">↑ +2.3% today</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Trading Interface Preview -->
+    <section id="trading" style="margin-top: 80px;">
+      <div class="section-title">
+        <span class="section-label">💹 Trading</span>
+        <h2>Place Trades Instantly</h2>
+        <p class="section-desc">Execute your trading strategy with our professional trading interface</p>
+      </div>
+
+      <div class="trading-interface">
+        <div class="trade-panel">
+          <h3>EUR/USD</h3>
+          <div class="chart-placeholder">
+            📈 Live chart will appear here
+          </div>
+          <div style="color: var(--text-muted); font-size: 0.9rem; text-align: center;">
+            Current Price: <strong style="color: var(--primary); font-size: 1.3rem;">1.0850</strong>
+          </div>
+        </div>
+
+        <div class="trade-panel">
+          <h3>Place Trade</h3>
+
+          <div class="form-group">
+            <label class="form-label">Select Market</label>
+            <select class="form-input">
+              <option>EUR/USD - Forex</option>
+              <option>GBP/USD - Forex</option>
+              <option>GOLD - Commodities</option>
+              <option>US500 - Indices</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Trade Direction</label>
+            <div class="direction-buttons">
+              <button class="direction-btn active">📈 CALL</button>
+              <button class="direction-btn">📉 PUT</button>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Stake Amount (USD)</label>
+            <input type="number" class="form-input" value="100" min="1">
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Duration</label>
+            <div style="display: grid; grid-template-columns: 1fr 100px; gap: 10px;">
+              <input type="number" class="form-input" value="5" min="1">
+              <select class="form-input">
+                <option>Minutes</option>
+                <option>Hours</option>
+                <option>Days</option>
+              </select>
+            </div>
+          </div>
+
+          <button class="btn btn-primary" style="width: 100%; margin-top: 20px;">
+            Place Trade
+          </button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Login Modal -->
+  <div class="modal" id="loginModal">
+    <div class="modal-content">
+      <button class="modal-close" onclick="closeLoginModal()">✕</button>
+
+      <div class="modal-header">
+        <h2>Connect Account</h2>
+        <p style="color: var(--text-secondary); margin: 0;">Paste your Deriv API token to get started</p>
+      </div>
+
+      <div class="modal-form">
+        <div class="form-group">
+          <label class="form-label">Deriv API Token</label>
+          <textarea
+            id="tokenInput"
+            class="form-input"
+            style="min-height: 100px; resize: vertical; font-family: monospace; font-size: 0.85rem;"
+            placeholder="Paste your API token here..."
+          ></textarea>
+          <p style="color: var(--text-muted); font-size: 0.8rem; margin: 8px 0 0;">
+            Get your token from your Deriv account security settings
+          </p>
+        </div>
+
+        <div id="errorBox" class="hidden" style="background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.3); color: #f4b3b3; padding: 12px; border-radius: 8px; font-size: 0.9rem;"></div>
+
+        <button class="btn btn-primary" style="width: 100%;" onclick="handleLogin()">
+          Connect Account
+        </button>
+
+        <div style="background: rgba(255, 107, 53, 0.08); border: 1px solid rgba(255, 107, 53, 0.2); padding: 16px; border-radius: 10px; margin-top: 16px;">
+          <p style="margin: 0 0 8px; color: var(--text-secondary); font-size: 0.85rem; font-weight: 600;">How to get your token:</p>
+          <ol style="margin: 0; padding-left: 18px; color: var(--text-muted); font-size: 0.8rem;">
+            <li>Go to your Deriv account</li>
+            <li>Navigate to Security & Password</li>
+            <li>Create an API token</li>
+            <li>Paste it here to authenticate</li>
+          </ol>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer>
+    <div class="footer-content">
+      <div class="footer-section">
+        <h4>Product</h4>
+        <ul>
+          <li><a href="#">Features</a></li>
+          <li><a href="#">Pricing</a></li>
+          <li><a href="#">Security</a></li>
+          <li><a href="#">Blog</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-section">
+        <h4>Resources</h4>
+        <ul>
+          <li><a href="#">Documentation</a></li>
+          <li><a href="#">API Reference</a></li>
+          <li><a href="#">Support</a></li>
+          <li><a href="#">Community</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-section">
+        <h4>Company</h4>
+        <ul>
+          <li><a href="#">About</a></li>
+          <li><a href="#">Careers</a></li>
+          <li><a href="#">Contact</a></li>
+          <li><a href="#">Press</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-section">
+        <h4>Legal</h4>
+        <ul>
+          <li><a href="#">Privacy</a></li>
+          <li><a href="#">Terms</a></li>
+          <li><a href="#">Disclaimer</a></li>
+          <li><a href="#">Cookies</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <p>© 2026 DerivTrade. All rights reserved. | Not affiliated with Deriv | Risk Warning: Trading involves substantial loss.</p>
+    </div>
+  </footer>
+
+  <script>
+    const WS_URL = "wss://ws.derivws.com/websockets/v3";
+    const TOKEN_KEY = "deriv_token";
+    let socket = null;
+    let requestId = 1;
+
+    const statusDot = document.getElementById("statusDot");
+    const statusText = document.getElementById("statusText");
+    const loginModal = document.getElementById("loginModal");
+    const tokenInput = document.getElementById("tokenInput");
+    const errorBox = document.getElementById("errorBox");
+
+    function setStatus(connected) {
+      statusDot.classList.toggle("online", connected);
+      statusText.textContent = connected ? "Live" : "Offline";
+    }
+
+    function sendMessage(payload) {
+      if (!socket || socket.readyState !== WebSocket.OPEN) {
+        console.warn("Socket not open");
+        return null;
+      }
+
+      const finalPayload = { ...payload, req_id: requestId };
+      socket.send(JSON.stringify(finalPayload));
+      requestId += 1;
+      return finalPayload;
+    }
+
+    function initializeSocket() {
+      if (socket && socket.readyState === WebSocket.OPEN) return;
+
+      socket = new WebSocket(WS_URL);
+
+      socket.onopen = () => {
+        setStatus(true);
+        const token = localStorage.getItem(TOKEN_KEY);
+        if (token) authorize(token);
+      };
+
+      socket.onmessage = (event) => {
+        const data = JSON.parse(event.data);
+        handleMessage(data);
+      };
+
+      socket.onerror = () => setStatus(false);
+      socket.onclose = () => setStatus(false);
+    }
+
+    function authorize(token) {
+      sendMessage({ authorize: token });
+    }
+
+    function handleMessage(data) {
+      if (data.error) {
+        showError(data.error.message || "API error");
+        return;
+      }
+
+      if (data.authorize) {
+        localStorage.setItem(TOKEN_KEY, tokenInput.value);
+        closeLoginModal();
+        alert("✓ Account connected successfully!");
+      }
+    }
+
+    function handleLogin() {
+      const token = tokenInput.value.trim();
+      if (!token) {
+        showError("Please enter your Deriv API token");
+        return;
+      }
+      authorize(token);
+    }
+
+    function showError(message) {
+      errorBox.textContent = message;
+      errorBox.classList.remove("hidden");
+    }
+
+    function hideError() {
+      errorBox.textContent = "";
+      errorBox.classList.add("hidden");
+    }
+
+    function openLoginModal() {
+      loginModal.classList.add("active");
+      hideError();
+    }
+
+    function closeLoginModal() {
+      loginModal.classList.remove("active");
+    }
+
+    function scrollToSection(id) {
+      const element = document.getElementById(id);
+      element.scrollIntoView({ behavior: "smooth" });
+    }
+
+    loginModal.addEventListener("click", (e) => {
+      if (e.target === loginModal) closeLoginModal();
+    });
+
+    tokenInput.addEventListener("focus", hideError);
+
+    initializeSocket();
+    setStatus(false);
+  </script>
+</body>
+</html>
